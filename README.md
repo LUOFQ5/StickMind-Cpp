@@ -1,2 +1,2 @@
-# StickMind-CS106B
-Follow StickMind, learn  CS106B course.
+Only for recording the process of my learing. 
+Thanks for sharing the materials from Stanford Courses.
