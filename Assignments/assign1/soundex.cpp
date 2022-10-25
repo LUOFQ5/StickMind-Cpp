@@ -39,93 +39,147 @@ string removeNonLetters(string s) {
  * 根据规定的编码系统，将字母转换成数字0-6
  * 这种写法太冗长了。。。。。
  */
-int charToDigit(char cc)
-{
-    int digit = -1;
+//int charToDigit(char cc)
+//{
+//    int digit = -1;
 
-    if (toupper(cc) == 'A' || toupper(cc) == 'E' || toupper(cc) == 'I' || toupper(cc) == 'O' || toupper(cc) == 'U' || toupper(cc) == 'H' || toupper(cc) == 'W' || toupper(cc) == 'Y')
-    {
-        digit = 0;
-    }
-    else if (toupper(cc) == 'B' || toupper(cc) == 'F' || toupper(cc) == 'P' || toupper(cc) == 'V')
-    {
-        digit = 1;
-    }
-    else if (toupper(cc) == 'C' || toupper(cc) == 'G' || toupper(cc) == 'J' || toupper(cc) == 'K' || toupper(cc) == 'Q' || toupper(cc) == 'S' || toupper(cc) == 'X' || toupper(cc) == 'Z')
-    {
-        digit = 2;
-    }
-    else if (toupper(cc) == 'D' || toupper(cc) == 'T')
-    {
-        digit = 3;
-    }
-    else if (toupper(cc) == 'L')
-    {
-        digit = 4;
-    }
-    else if (toupper(cc) == 'M' || toupper(cc) == 'N')
-    {
-        digit = 5;
-    }
-    else if (toupper(cc) == 'R')
-    {
-        digit = 6;
-    }
+//    if (toupper(cc) == 'A' || toupper(cc) == 'E' || toupper(cc) == 'I' || toupper(cc) == 'O' || toupper(cc) == 'U' || toupper(cc) == 'H' || toupper(cc) == 'W' || toupper(cc) == 'Y')
+//    {
+//        digit = 0;
+//    }
+//    else if (toupper(cc) == 'B' || toupper(cc) == 'F' || toupper(cc) == 'P' || toupper(cc) == 'V')
+//    {
+//        digit = 1;
+//    }
+//    else if (toupper(cc) == 'C' || toupper(cc) == 'G' || toupper(cc) == 'J' || toupper(cc) == 'K' || toupper(cc) == 'Q' || toupper(cc) == 'S' || toupper(cc) == 'X' || toupper(cc) == 'Z')
+//    {
+//        digit = 2;
+//    }
+//    else if (toupper(cc) == 'D' || toupper(cc) == 'T')
+//    {
+//        digit = 3;
+//    }
+//    else if (toupper(cc) == 'L')
+//    {
+//        digit = 4;
+//    }
+//    else if (toupper(cc) == 'M' || toupper(cc) == 'N')
+//    {
+//        digit = 5;
+//    }
+//    else if (toupper(cc) == 'R')
+//    {
+//        digit = 6;
+//    }
 
-    return digit;
+//    return digit;
+//}
+//不用Char,改用String
+string charsToDigits(string s) {
+    string result;
+    string zero = "AEIOUHWY";
+    string one = "BFPV";
+    string two = "CGJKQSXZ";
+    string three = "DT";
+    string four = "L";
+    string five = "MN";
+    string six = "R";
+    for (auto cc : s) {
+        char ch = toupper(cc);
+        if (zero.find(ch) != string::npos)
+        {
+            result += "0";
+        }
+        if (one.find(ch) != string::npos)
+        {
+            result += "1";
+        }
+        if (two.find(ch) != string::npos)
+        {
+            result += "2";
+        }
+        if (three.find(ch) != string::npos)
+        {
+            result += "3";
+        }
+        if (four.find(ch) != string::npos)
+        {
+            result += "4";
+        }
+        if (five.find(ch) != string::npos)
+        {
+            result += "5";
+        }
+        if (six.find(ch) != string::npos)
+        {
+            result += "6";
+        }
+
+    }
+    return result;
 }
+
+//去除重复数字中的第二个数字，利用新字符窜的当前字符和旧字符串的下一个字符对比。
+string coalesceLetters(string s) {
+    string result;
+    for (int i = 0; i < s.length(); i++) {
+        if (result.back() != s[i]) {
+            result += s[i];
+        }
+    }
+    return result;
+}
+
+STUDENT_TEST("测试合并函数") {
+    EXPECT_EQUAL(coalesceLetters("223344"), "234");
+    EXPECT_EQUAL(coalesceLetters(""), "");
+    EXPECT_EQUAL(coalesceLetters("aa11bb22"), "a1b2");
+    EXPECT_EQUAL(coalesceLetters("aa__bb  c''d"), "a_b c'd");
+}
+
+
 
 //通过soundex转化算法，将输入的字符串转化为特定的数据编码；
 string soundex(string s) {
-    // TODO:
     //去除字符串中的非字母元素
-    s = removeNonLetters(s);
+    string result;
+    result = removeNonLetters(s);
 
     //将首字母转换成大写，并记录下来
-    char S0 = toUpperCase(s)[0];
+    char S0 = toUpperCase(result)[0];
 
     //根据编码规则、将字母转换成数字，数字依然作为string进行存储
-    string soundexName;
-    for (int i = 0; i < s.length(); ++i)
-    {
-        soundexName += integerToString(charToDigit(s[i]));
-    }
+    result = charsToDigits(s);
+
     //去除重复数字中的第二个数字；
-    //定义一个迭代器来实现erase功能
-    string::iterator it;
-    for (it = soundexName.begin(); it != soundexName.end(); it++)
-    {
-        while (it + 1 != soundexName.end())
-        {
-            if (*it == *(it + 1))
-            {
-                soundexName.erase(it + 1);
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-    //将首个数字转换回大写字母
-    soundexName[0] = S0;
+    result = coalesceLetters(result);
+
+       //将首个数字转换回大写字母
+    result[0] = S0;
     //去除所有0数字，采用erase函数实现去除指定值的字符
-    soundexName.erase(remove(soundexName.begin(),soundexName.end(),'0'),soundexName.end());
+    result.erase(remove(result.begin(),result.end(),'0'),result.end());
 
     //如果字符串的长度小于4，则在末尾加0
-    while (soundexName.length() < 4)
+    while (result.length() < 4)
     {
-        soundexName.push_back('0');
+        result.push_back('0');
     }
     //如果字符串的长度大于4，则删除末尾的字符
-    while (soundexName.length() > 4)
+    while (result.length() > 4)
     {
-        soundexName.erase(soundexName.end() - 1);
+        result.erase(result.end() - 1);
     }
 
-    return soundexName;
+    return result;
 }
 
+STUDENT_TEST("测试编码程序") {
+    EXPECT_EQUAL(soundex("Curie"), "C600");
+    EXPECT_EQUAL(soundex("O'Conner"), "O256");
+    EXPECT_EQUAL(soundex(""), "0000");
+    EXPECT_EQUAL(soundex(" ——"), "0000");
+    EXPECT_EQUAL(soundex("上海"), "0000");
+}
 
 /* TODO: 实现soundex检索程序：
  */
@@ -260,12 +314,12 @@ STUDENT_TEST("~~~~Test for removing puntuation, digits, and spaces") {
 
 
 STUDENT_TEST("~~~~Test for charToDigit") {
-    char cc = 'a';
-    int result = charToDigit(cc);
-    EXPECT_EQUAL(result, 0);
-    cc = 's';
-    result = charToDigit(cc);
-    EXPECT_EQUAL(result, 2);
+    string cc = "a";
+    string result = charsToDigits(cc);
+    EXPECT_EQUAL(result, "0");
+    cc = "s";
+    result = charsToDigits(cc);
+    EXPECT_EQUAL(result, "2");
 }
 
 STUDENT_TEST("~~~~Test for soundex function") {

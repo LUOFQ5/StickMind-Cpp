@@ -54,31 +54,53 @@ void findPerfects(long stop) {
 
 /* TODO:
  * 一种优化的寻找完全数算法，只需穷举到N的平方根附近；
- */
+*/
+//long smarterSum(long n) {
+//    // TODO:
+//    //先走一个0和1
+//    long smarterTotal = 0;
+//    if (n == 0 || n == 1)
+//    {
+//        return 0;
+//    }
+//    //for-loop, 除数从1增加到小于或等于平方根的最接近整数
+//    for (long divisor = 1, max = sqrt(n); divisor <= max ; divisor++)
+//    {
+//        //如果n能被divisor整除，则divisor是因子，需要加和
+//        //并且如果最大的divisor不是N的平方根，那么必然存在另一个因子 n/divisor，一起加和
+//        if (n % divisor == 0)
+//        {
+//            smarterTotal += divisor;
+//            if (divisor != 1 && n != max * max)
+//            {
+//                smarterTotal += n/divisor;
+//            }
+//        }
+//    }
+//    return smarterTotal;
+//}
+//版本2，不考虑0，直接从1开始能简化代码
 long smarterSum(long n) {
-    // TODO:
-    //先走一个0和1
-    long smarterTotal = 0;
-    if (n == 0 || n == 1)
+    //先走一个 1
+    if (n == 1)
     {
         return 0;
     }
-    //for-loop, 除数从1增加到小于或等于平方根的最接近整数
-    for (long divisor = 1, max = sqrt(n); divisor <= max ; divisor++)
-    {
-        //如果n能被divisor整除，则divisor是因子，需要加和
-        //并且如果最大的divisor不是N的平方根，那么必然存在另一个因子 n/divisor，一起加和
-        if (n % divisor == 0)
-        {
-            smarterTotal += divisor;
-            if (divisor != 1 && n != max * max)
-            {
-                smarterTotal += n/divisor;
+
+    long total = 1;
+    //for loop, from 1 to sqrt(n)
+    for (long divisor = 2, max = sqrt(n); divisor <= max; divisor++) {
+        if (n % divisor == 0) {
+            total += divisor;
+            if (n != divisor * divisor) {
+                total += n / divisor;
             }
         }
     }
-    return smarterTotal;
+    return total;
 }
+
+
 
 /* TODO:
  * 判断是否是完全数，返回bool值；
@@ -106,24 +128,39 @@ void findPerfectsSmarter(long stop) {
 /* TODO:
  * 基于欧几里得优化的完全数搜索算法
  */
+//long findNthPerfectEuclid(long n) {
+//    //TODO: 通过公式计算m值，判断m是否为素数-即完全数，通过m计算得到一个新的完全数
+//    //k为迭代数，nn为第几个完全数的标识
+//    long nn = 0;
+//    long k = 1;
+//    while (true)
+//    {
+//        long m = pow(2, k) - 1;
+//        //如m为完全数，则得到第nn个完全数，如nn符合需求，则返回该完全数；
+//        if (smarterSum(m) == 1)
+//        {
+//            nn++;
+//            if (nn == n)
+//            {
+//                return m * pow(2, k - 1);
+//            }
+//        }
+//        k++;
+//    }
+//    return 0;
+//}
+//简化版本：
 long findNthPerfectEuclid(long n) {
-    //TODO: 通过公式计算m值，判断m是否为素数-即完全数，通过m计算得到一个新的完全数
-    //k为迭代数，nn为第几个完全数的标识
     long nn = 0;
-    long k = 1;
-    while (true)
+    for (long k = 1; k < LONG_MAX; k++)
     {
         long m = pow(2, k) - 1;
-        //如m为完全数，则得到第nn个完全数，如nn符合需求，则返回该完全数；
-        if (smarterSum(m) == 1)
-        {
-            nn++;
-            if (nn == n)
-            {
+        if (smarterSum(m) == 1) {
+            nn ++;
+            if (nn == n) {
                 return m * pow(2, k - 1);
             }
         }
-        k++;
     }
     return 0;
 }
@@ -184,7 +221,6 @@ STUDENT_TEST("Test negative values: ") {
     EXPECT(!isPerfect(-999));
 }
 
-****************************************************************************************//
 //Test for smarter functions
 STUDENT_TEST("Test smarterSum of small inputs") {
     EXPECT_EQUAL(smarterSum(1), divisorSum(1));
@@ -223,7 +259,6 @@ STUDENT_TEST("Time trials of findPerfects on doubling input sizes") {
     TIME_OPERATION(36000000, findPerfectsSmarter(36000000));
 }
 
-**************************************************************************************//
 //Test for findNthPerfectEucli
 STUDENT_TEST("Test findNthPerfectEucli") {
     EXPECT_EQUAL(findNthPerfectEuclid(1), 6);
