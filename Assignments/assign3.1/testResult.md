@@ -8,3 +8,4 @@
 ![image](https://user-images.githubusercontent.com/62541370/200297790-eb551463-ce66-4ea4-be03-9c7ad5c739e9.png)
 
 ## Merge
+![image](https://user-images.githubusercontent.com/62541370/200298955-b636eee6-0a17-41a4-b17b-64f371681d94.png)
